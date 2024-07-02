@@ -5,6 +5,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from .forms import CustomUserCreationForm, LargeFileForm
 import pandas as pd
 from unittest.mock import patch
+import os
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 
@@ -83,20 +84,36 @@ class TestUploadFileView(TestCase):
     def setUp(self):
         self.client = Client()
         self.upload_file_url = reverse('upload_file')
+        self.csv_file_path = r'C:\Users\Tanay\Desktop\Test\sample\cmp_data1.csv'
+
+        # Create a test user
+        self.user = User.objects.create_user(username='testuser', password='password')
+
+    def login_user(self):
+        # Helper function to log in the test user
+        # self.client.login(username='testuser', password='password')
+        self.client.force_login(self.user)
 
     def test_upload_file_view_get(self):
+        # Login the user
+        self.login_user()
+
+        # Perform a GET request to the upload_file view
         response = self.client.get(self.upload_file_url)
+
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'upload-file.html')
+
+        # Optionally, assert the form instance if needed
         self.assertIsInstance(response.context['form'], LargeFileForm)
 
     def test_upload_file_view_post_invalid_form(self):
+        # Login the user
+        self.login_user()
         # Simulate posting invalid data (empty data here, adjust as needed)
         response = self.client.post(self.upload_file_url, {})
-
-        # Check if form errors are present in the response context
-        self.assertEqual(response.status_code, 200)  # Form errors keep the status code 200
-
+        # Check if the response status code is 200 (form errors keep the status code 200)
+        self.assertEqual(response.status_code, 200)
         # Retrieve the form from the response context
         form = response.context['form']
 
@@ -104,8 +121,29 @@ class TestUploadFileView(TestCase):
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors['file'], ['This field is required.'])
 
+    def test_upload_file_view_post_valid_form(self):
+        # Login the user
+        self.login_user()
 
+        # Open and prepare the file for upload
+        with open(self.csv_file_path, 'rb') as csv_file:
+            file_data = {
+                'file': SimpleUploadedFile(
+                    os.path.basename(self.csv_file_path),
+                    csv_file.read(),
+                    content_type='text/csv'
+                )
+            }
 
+            # Simulate posting valid data with the CSV file
+            response = self.client.post(self.upload_file_url, file_data, format='multipart')
+
+            # Check if the response is a redirect (status code 302)
+            self.assertEqual(response.status_code, 302)  # Redirects after successful form submission
+
+            # Optionally, assert the success redirect location
+            # Adjust 'success/' to match your actual success URL or use reverse() if applicable
+            self.assertRedirects(response, 'success/', target_status_code=200)
 
 class TestCountRecordsView(TestCase):
     def setUp(self):

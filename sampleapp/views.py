@@ -11,11 +11,12 @@ from django.core.management.base import BaseCommand
 import uuid
 from django.views.decorators.csrf import csrf_exempt
 import threading
+from functools import wraps
+
+global current_user_name
+current_user_name = None
 
 
-
-def base(r):
-    return render(r,'base.html')
 # =======================================================================
 def register(request):
     if request.method == 'POST':
@@ -28,12 +29,13 @@ def register(request):
     return render(request, 'register.html', {'form': f})
 
 def custom_login(request):
+    global current_user_name
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            print("login horaha")
+            current_user_name = user.username  # Store the username globally
             return redirect('base')
         else:
             print("Invalid form")
@@ -44,9 +46,25 @@ def custom_login(request):
 
 def custom_logout(request):
     logout(request)
+    global current_user_name
+    current_user_name = None
     return redirect('custom_login')
 
+def login_required(view_func):
+    @wraps(view_func)
+    def wrapper(request, *args, **kwargs):
+        global current_user_name
+        if not current_user_name:
+            return redirect('custom_login')
+        return view_func(request, *args, **kwargs)
+    return wrapper
+
+@login_required
+def base(r):
+    return render(r,'base.html')
+
 # ==============================================================================
+@login_required
 def upload_file(request):
     if request.method == 'POST':
         form = LargeFileForm(request.POST, request.FILES)
@@ -108,6 +126,7 @@ def upload_chunk(request):
 
 # ===========================================================================
 
+@login_required
 def query_builder(request):
         if df is None:
             print("DataFrame is None. Please upload data.")
@@ -116,6 +135,7 @@ def query_builder(request):
 
  # =================================================================
 
+@login_required
 def user_list(request):
     users = User.objects.all()  # Fetch all registered users
     return render(request, 'user_list.html', {'users': users})
