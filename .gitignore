@@ -1,0 +1,118 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Django stuff:
+*.log
+*.pot
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+
+# If you use PostgreSQL:
+*.pgsql
+
+# Ignore the local database settings
+/local_settings.py
+
+# Ignore the secret key settings
+/secrets.py
+
+# Ignore Django migrations:
+*/migrations/
+
+# Ignore the coverage tool output:
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+
+# Pytest
+.pytest_cache/
+
+# Ignore mypy check files
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# PEP 585 warning
+.typing/
+
+# Unit test / coverage reports
+coverage_html_report/
+junit.xml
+
+# Translations
+*.mo
+
+# Logs and databases
+*.log
+*.sql
+
+# Media and other uploads
+media/
+uploads/
+
+# Static files
+staticfiles/
+static/
+
+# Ignore all envs
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# macOS stuff:
+*.DS_Store
+
+# Windows stuff:
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Visual Studio Code
+.vscode/
+
+# PyCharm
+.idea/
+
+# Python virtual environments
+.Python
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# pyenv
+.python-version
+
+# celery beat schedule file
+celerybeat-schedule
+
+# Environments
+.env
+.env.*
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Editor directories and files
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Ignoring additional folders and files
+uploads/

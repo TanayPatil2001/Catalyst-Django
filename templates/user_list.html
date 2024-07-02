@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registered Users</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<style>
+    body, html {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        background: url("{% static 'catalyst-bg img.jpg' %}") no-repeat center center fixed;
+        background-size: cover;
+    }
+    .content-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+    }
+    .container {
+        max-width: 900px;
+        padding: 2rem;
+        border: 1px solid #ced4da;
+        border-radius: 5px;
+        background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent background */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-top: 20px; /* Added margin-top for spacing */
+    }
+    h1 {
+        margin-bottom: 1.5rem;
+    }
+</style>
+<div class="content-wrapper">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <h1 align="center">Registered Users</h1>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                        <tr>
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>
+                                {% if user.is_active %}
+                                    Active
+                                {% else %}
+                                    Deactivated
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="3">No registered users found.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

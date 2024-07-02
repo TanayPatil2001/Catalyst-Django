@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Query Builder</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script>
+        async function getRecordCount() {
+            const title = document.getElementById('title').value;
+
+            const response = await fetch(`/api/count-records/?title=${title}`);
+            const data = await response.json();
+
+            document.getElementById('result').innerText = `Count: ${data.count}`;
+        }
+    </script>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+        .navbar {
+            display: flex;
+            justify-content: center;
+            background-color: #333;
+            overflow: hidden;
+        }
+        .navbar a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 50px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        .navbar a:hover {
+            background-color: #575757;
+        }
+        .navbar .logout {
+            margin-left: auto;
+            background-color: #e74c3c;
+        }
+        .navbar .logout:hover {
+            background-color: #c0392b;
+        }
+        .container {
+            margin-top: 50px;
+            max-width: 900px;
+            background-color: #fff;
+            padding: 30px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        .navbar {
+            margin-bottom: 20px;
+        }
+    </style>
+<!--</head>-->
+<!--<body>-->
+<!--    <nav class="navbar navbar-expand-lg navbar-light bg-light">-->
+<!--        <div class="navbar">-->
+<!--            <a href="upload/">Upload Data</a>-->
+<!--            <a href="query-builder/">Query Builder</a>-->
+<!--            <a href="#users">Users</a>-->
+<!--            <a href="#logout" class="logout">Logout</a>-->
+<!--        </div>-->
+<!--    </nav>-->
+    <div class="container">
+        <h1 class="mb-4">Query Builder</h1>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="name" class="form-control" placeholder="Name">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="domain">Domain</label>
+                    <input type="text" id="domain" name="domain" class="form-control" placeholder="Domain">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="country">Country</label>
+                    <input type="text" id="country" name="country" class="form-control" placeholder="Country">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="year_founded">Year Founded</label>
+                    <input type="number" id="year_founded" name="year_founded" class="form-control" placeholder="Year Founded">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="industry">Industry</label>
+                    <input type="text" id="industry" name="industry" class="form-control" placeholder="Industry">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block mt-3">Reset</button>
+            <button type="button" onclick="getRecordCount()" class="btn btn-secondary btn-block mt-3">Get Record Count</button>
+        </form>
+        <div id="result" class="mt-4">
+            {% if num is not None %}
+                <p>Count: {{ num }}</p>
+            {% endif %}
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+   <script>
+    async function getRecordCount() {
+        const name = document.getElementById('name').value;
+        const domain = document.getElementById('domain').value;
+        const country = document.getElementById('country').value;
+        const yearFounded = document.getElementById('year_founded').value;
+        const industry = document.getElementById('industry').value;
+
+        const url = `http://127.0.0.1:8000/home/api/count_records/?name=${name}&domain=${domain}&country=${country}&year_founded=${yearFounded}&industry=${industry}`;
+        const response = await fetch(url);
+        const data = await response.json();
+
+        document.getElementById('result').innerHTML = `<p>Count: ${data.count}</p>`;
+    }
+</script>
+<!--</body>-->
+<!--</html>-->
+
+{% endblock %}
